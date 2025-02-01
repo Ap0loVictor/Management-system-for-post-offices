@@ -3,6 +3,8 @@
 #include <string.h> 
 //\n
 
+// Teste de commit pra ver como funciona
+
     struct veiculos {
         int veiculoID; // numerico ou igual placa de carro??
         char tipo_veiculo[20]; // moto, caminhão, carro, etc...
