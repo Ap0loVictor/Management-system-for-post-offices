@@ -1,0 +1,4 @@
+ID do Veículo: 6422280
+Tipo veiculo: cd
+Carga veiculo: 424686974850344230000000000000000.00 Kg
+Status veiculo: 'c:\Users\LF_
