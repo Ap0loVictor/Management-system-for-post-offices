@@ -35,6 +35,34 @@ struct Clientes
     char tipoServico[20];
 };
 
+int pegarUltimoId(const char *arquivoDaEntidade){
+    FILE *arquivoId = fopen(arquivoDaEntidade, "r");
+    if (arquivoId == NULL){
+        arquivoId = fopen(arquivoDaEntidade,"w");
+        if (arquivoId == NULL){
+            printf("Erro ao criar o arquivo");
+            system("Pause");
+            exit(1);
+        }
+        fprintf(arquivoId,"0");
+        fclose(arquivoId);
+        return 0;
+    }
+    int ultimo_id;
+    fscanf(arquivoId,"%d",&ultimo_id);
+    fclose(arquivoId);
+    return ultimo_id;
+}
+void atualizarId(const char *arquivoDaEntidade, int novo_id){
+    FILE *arquivoId = fopen(arquivoDaEntidade, "w");
+    if (arquivoId == NULL){
+        printf("Erro ao modificar o arquivo para salvar o ID.");
+        system("Pause");
+        exit(1);
+    }
+    fprintf(arquivoId, "%d", novo_id);
+}
+
 void cadastrarVeiculo(struct Veiculos veiculo)
 {
     FILE *arquivoVeiculos = fopen("Veiculos.txt", "a");
@@ -97,9 +125,9 @@ void cadastrarCliente(struct Clientes cliente)
 
 void adicionarVeiculo(struct Veiculos *veiculo)
 {
-    printf("Informe os dados do veiculo:\n\n");
-    printf("ID do Veiculo: ");
-    scanf("%d", &veiculo->veiculo_ID);
+    int id_veiculo = pegarUltimoId("IdVeiculo.txt")+1;
+    atualizarId("idVeiculo.txt",id_veiculo);
+    veiculo->veiculo_ID = id_veiculo;
 
     printf("Tipo de veiculo: ");
     scanf("%s", veiculo->tipoVeiculo);
@@ -113,9 +141,9 @@ void adicionarVeiculo(struct Veiculos *veiculo)
 
 void adicionarEntrega(struct Entregas *entrega)
 {
-    printf("\nInforme os dados da entrega:\n");
-    printf("ID da entrega: ");
-    scanf("%d", &entrega->entrega_ID);
+    int id_entrega = pegarUltimoId("idEntrega.txt") + 1;
+    atualizarId("idEntrega.txt", id_entrega);
+    entrega->entrega_ID = id_entrega;
 
     printf("Origem: ");
     scanf("%s", entrega->origem);
@@ -129,9 +157,9 @@ void adicionarEntrega(struct Entregas *entrega)
 
 void adicionarFuncionario(struct Funcionarios *funcionario)
 {
-    printf("\nInforme os dados do funcionario:\n");
-    printf("ID do funcionario: ");
-    scanf("%d", &funcionario->funcionario_ID);
+    int id_funcionario = pegarUltimoId("idFuncionarios.txt")+1;
+    atualizarId("idFuncionarios.txt", id_funcionario);
+    funcionario->funcionario_ID = id_funcionario;
 
     printf("Nome: ");
     scanf("%s", funcionario->nomeFuncionario);
@@ -139,9 +167,9 @@ void adicionarFuncionario(struct Funcionarios *funcionario)
 
 void adicionarCliente(struct Clientes *cliente)
 {
-    printf("\nInforme os dados do cliente:\n");
-    printf("ID do cliente: ");
-    scanf("%d", &cliente->cliente_ID);
+    int id_cliente = pegarUltimoId("idClientes.txt")+1;
+    atualizarId("idClientes.txt", id_cliente);
+    cliente->cliente_ID = id_cliente;
 
     printf("Nome: ");
     scanf("%s", cliente->nomeCliente);
@@ -153,6 +181,7 @@ void adicionarCliente(struct Clientes *cliente)
     scanf("%s", cliente->tipoServico);
 }
 
+
 int main()
 {
     struct Veiculos veiculo;
@@ -160,6 +189,7 @@ int main()
     struct Funcionarios funcionario;
     struct Clientes cliente;
 
+    int idVeiculo = 0, idEntrega = 0, idFuncionario = 0, idCliente = 0;
     char escolha1[12];
     char escolha2[13];
     printf("O que deseja fazer? (Adicionar/Visualizar/Editar/Deletar)\n");
@@ -181,6 +211,7 @@ int main()
         }
         else if (strcmp(escolha2, "Funcionario") == 0)
         {
+            idFuncionario +=1;
             adicionarFuncionario(&funcionario);
             cadastrarFuncionario(funcionario);
         }
