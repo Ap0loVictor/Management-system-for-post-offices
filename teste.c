@@ -180,8 +180,143 @@ void adicionarCliente(struct Clientes *cliente)
     printf("Tipo de serviço: ");
     scanf("%s", cliente->tipoServico);
 }
+void deletarVeiculo(int veiculo_ID) {
+    FILE *arquivoVeiculos = fopen("Veiculos.txt", "r");
+    FILE *arquivoTemp = fopen("Temp.txt", "w");
+    if (arquivoVeiculos == NULL || arquivoTemp == NULL) {
+        printf("Erro ao abrir arquivo.");
+        system("Pause");
+        exit(1);
+    }
 
+    struct Veiculos veiculo;
+    int encontrado = 0;
 
+    while (fscanf(arquivoVeiculos, "ID do Veículo: %d\nTipo: %s\nCarga: %f Kg\nStatus: %s\n",
+                 &veiculo.veiculo_ID, veiculo.tipoVeiculo, &veiculo.cargaVeiculo, veiculo.statusVeiculo) != EOF) {
+        if (veiculo.veiculo_ID != veiculo_ID) {
+            fprintf(arquivoTemp, "ID do Veículo: %d\nTipo: %s\nCarga: %.2f Kg\nStatus: %s\n",
+                    veiculo.veiculo_ID, veiculo.tipoVeiculo, veiculo.cargaVeiculo, veiculo.statusVeiculo);
+        } else {
+            encontrado = 1;
+        }
+    }
+
+    fclose(arquivoVeiculos);
+    fclose(arquivoTemp);
+
+    if (encontrado) {
+        remove("Veiculos.txt");
+        rename("Temp.txt", "Veiculos.txt");
+        printf("Veículo deletado com sucesso.\n");
+    } else {
+        remove("Temp.txt");
+        printf("Veículo não encontrado.\n");
+    }
+}
+
+void deletarEntrega(int entrega_ID) {
+    FILE *arquivoEntregas = fopen("Entregas.txt", "r");
+    FILE *arquivoTemp = fopen("Temp.txt", "w");
+    if (arquivoEntregas == NULL || arquivoTemp == NULL) {
+        printf("Erro ao abrir arquivo.");
+        system("Pause");
+        exit(1);
+    }
+
+    struct Entregas entrega;
+    int encontrado = 0;
+
+    while (fscanf(arquivoEntregas, "ID da Entrega: %d\nOrigem: %s\nDestino: %s\nTempo Estimado: %f Horas\n",
+                  &entrega.entrega_ID, entrega.origem, entrega.destino, &entrega.tempoEstimado) != EOF) {
+        if (entrega.entrega_ID != entrega_ID) {
+            fprintf(arquivoTemp, "ID da Entrega: %d\nOrigem: %s\nDestino: %s\nTempo Estimado: %.1f Horas\n",
+                    entrega.entrega_ID, entrega.origem, entrega.destino, entrega.tempoEstimado);
+        } else {
+            encontrado = 1;
+        }
+    }
+
+    fclose(arquivoEntregas);
+    fclose(arquivoTemp);
+
+    if (encontrado) {
+        remove("Entregas.txt");
+        rename("Temp.txt", "Entregas.txt");
+        printf("Entrega deletada com sucesso.\n");
+    } else {
+        remove("Temp.txt");
+        printf("Entrega não encontrada.\n");
+    }
+}
+void deletarFuncionario(int funcionario_ID) {
+    FILE *arquivoFuncionarios = fopen("Funcionarios.txt", "r");
+    FILE *arquivoTemp = fopen("Temp.txt", "w");
+    if (arquivoFuncionarios == NULL || arquivoTemp == NULL) {
+        printf("Erro ao abrir arquivo.");
+        system("Pause");
+        exit(1);
+    }
+
+    struct Funcionarios funcionario;
+    int encontrado = 0;
+
+    while (fscanf(arquivoFuncionarios, "ID do Funcionário: %d\nNome: %s\n",
+                  &funcionario.funcionario_ID, funcionario.nomeFuncionario) != EOF) {
+        if (funcionario.funcionario_ID != funcionario_ID) {
+            fprintf(arquivoTemp, "ID do Funcionário: %d\nNome: %s\n",
+                    funcionario.funcionario_ID, funcionario.nomeFuncionario);
+        } else {
+            encontrado = 1;
+        }
+    }
+
+    fclose(arquivoFuncionarios);
+    fclose(arquivoTemp);
+
+    if (encontrado) {
+        remove("Funcionarios.txt");
+        rename("Temp.txt", "Funcionarios.txt");
+        printf("Funcionário deletado com sucesso.\n");
+    } else {
+        remove("Temp.txt");
+        printf("Funcionário não encontrado.\n");
+    }
+}
+void deletarCliente(int cliente_ID) {
+    FILE *arquivoClientes = fopen("Clientes.txt", "r");
+    FILE *arquivoTemp = fopen("Temp.txt", "w");
+    if (arquivoClientes == NULL || arquivoTemp == NULL) {
+        printf("Erro ao abrir arquivo.");
+        system("Pause");
+        exit(1);
+    }
+
+    struct Clientes cliente;
+    int encontrado = 0;
+
+    while (fscanf(arquivoClientes, "ID do Cliente: %d\nNome: %s\nEndereço: %s\nTipo de Serviço: %s\n",
+                  &cliente.cliente_ID, cliente.nomeCliente, cliente.endereco, cliente.tipoServico) != EOF) {
+        if (cliente.cliente_ID != cliente_ID) {
+            fprintf(arquivoTemp, "ID do Cliente: %d\nNome: %s\nEndereço: %s\nTipo de Serviço: %s\n",
+                    cliente.cliente_ID, cliente.nomeCliente, cliente.endereco, cliente.tipoServico);
+        } else {
+            encontrado = 1;
+        }
+    }
+
+    fclose(arquivoClientes);
+    fclose(arquivoTemp);
+
+    if (encontrado) {
+        remove("Clientes.txt");
+        rename("Temp.txt", "Clientes.txt");
+        printf("Cliente deletado com sucesso.\n");
+    } else {
+        remove("Temp.txt");
+        printf("Cliente não encontrado.\n");
+    }
+}
 int main()
 {
     struct Veiculos veiculo;
@@ -227,6 +362,38 @@ int main()
     {
         printf("Ops! Parece que houve um erro de digitcao");
     }
+
+if (strcmp(escolha1, "Deletar") == 0) {
+    printf("O que deseja deletar? (Veiculo/Entrega/Funcionario/Cliente)\n");
+    scanf("%12s", escolha2);
+    if (strcmp(escolha2, "Veiculo") == 0) {
+        int id;
+        printf("Digite o ID do veículo a ser deletado: ");
+        scanf("%d", &id);
+        deletarVeiculo(id);
+    } else if (strcmp(escolha2, "Entrega") == 0) {
+        int id;
+        printf("Digite o ID da entrega a ser deletada: ");
+        scanf("%d", &id);
+        deletarEntrega(id);
+    } else if (strcmp(escolha2, "Funcionario") == 0) {
+        int id;
+        printf("Digite o ID do funcionário a ser deletado: ");
+        scanf("%d", &id);
+        deletarFuncionario(id);
+    } else if (strcmp(escolha2, "Cliente") == 0) {
+        int id;
+        printf("Digite o ID do cliente a ser deletado: ");
+        scanf("%d", &id);
+        deletarCliente(id);
+    } else {
+        printf("Ops! Parece que houve um erro de digitação.\n");
+    }
+} else {
+    printf("Ops! Parece que houve um erro de digitação.\n");
+}
+
+
 
     return 0;
 }

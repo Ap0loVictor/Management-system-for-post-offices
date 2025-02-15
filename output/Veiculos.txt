@@ -1,0 +1,8 @@
+ID do Ve√≠culo: 2
+Tipo: caminh∆o
+Carga: 200.00 Kg
+Status: disponivel
+ID do Ve√≠culo: 3
+Tipo: caminh∆o
+Carga: 200.00 Kg
+Status: disponivel

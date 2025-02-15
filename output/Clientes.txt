@@ -1,0 +1,8 @@
+ID do Cliente: 1
+Nome: paulo
+Endereço: rua
+Tipo de Serviço: 1
+ID do Cliente: 2
+Nome: laura
+Endereço: ra2
+Tipo de Serviço: premium
