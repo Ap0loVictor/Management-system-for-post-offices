@@ -137,6 +137,7 @@ void adicionarVeiculo(struct Veiculos *veiculo)
 
     printf("Status (disponivel/ocupado): ");
     scanf("%s", veiculo->statusVeiculo);
+    getchar ();
 }
 
 void adicionarEntrega(struct Entregas *entrega)
@@ -153,6 +154,7 @@ void adicionarEntrega(struct Entregas *entrega)
 
     printf("Tempo estimado (em horas): ");
     scanf("%f", &entrega->tempoEstimado);
+    getchar ();
 }
 
 void adicionarFuncionario(struct Funcionarios *funcionario)
@@ -163,6 +165,7 @@ void adicionarFuncionario(struct Funcionarios *funcionario)
 
     printf("Nome: ");
     scanf("%s", funcionario->nomeFuncionario);
+    getchar ();
 }
 
 void adicionarCliente(struct Clientes *cliente)
@@ -179,6 +182,7 @@ void adicionarCliente(struct Clientes *cliente)
 
     printf("Tipo de serviço: ");
     scanf("%s", cliente->tipoServico);
+    getchar ();
 }
 void deletarVeiculo(int veiculo_ID) {
     FILE *arquivoVeiculos = fopen("Veiculos.txt", "r");
@@ -570,6 +574,43 @@ void editarCliente(int cliente_ID){
         printf("Cliente não encontrado.\n");
     }
 }
+
+void visualizarPorID(const char *nomeArquivo, const char *tipo, int idBuscado) {
+    FILE *arquivo = fopen(nomeArquivo, "r");
+    if (arquivo == NULL) {
+        printf("Erro ao abrir o arquivo %s.\n", nomeArquivo);
+        return;
+    }
+
+    char linha[200];
+    int encontrado = 0;
+
+    printf("\nVisualização de %s com ID %d\n", tipo, idBuscado);
+    while (fgets(linha, sizeof(linha), arquivo)) {
+        if (strstr(linha, "ID") && strstr(linha, tipo)) {
+            int idAtual;
+            sscanf(linha, "%*[^:]: %d", &idAtual);
+            if (idAtual == idBuscado) {
+                encontrado = 1;
+                printf("%s", linha);
+                for (int i = 0; i < 3; i++) {
+                    if (fgets(linha, sizeof(linha), arquivo)) {
+                        printf("%s", linha);
+                    }
+                }
+                break;
+            }
+        }
+    }
+
+    if (!encontrado) {
+        printf("Nenhum %s encontrado com ID %d.\n", tipo, idBuscado);
+    }
+
+    fclose(arquivo);
+}
+
+
 int main()
 {
     struct Veiculos veiculo;
