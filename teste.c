@@ -189,7 +189,6 @@ int main()
     struct Funcionarios funcionario;
     struct Clientes cliente;
 
-    int idVeiculo = 0, idEntrega = 0, idFuncionario = 0, idCliente = 0;
     char escolha1[12];
     char escolha2[13];
     printf("O que deseja fazer? (Adicionar/Visualizar/Editar/Deletar)\n");
@@ -211,7 +210,6 @@ int main()
         }
         else if (strcmp(escolha2, "Funcionario") == 0)
         {
-            idFuncionario +=1;
             adicionarFuncionario(&funcionario);
             cadastrarFuncionario(funcionario);
         }
