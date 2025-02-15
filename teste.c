@@ -358,40 +358,41 @@ int main()
             printf("Ops! Parece que houve um erro de digitacao");
         }
     }
+    else if (strcmp(escolha1, "Deletar") == 0) 
+    {
+        printf("O que deseja deletar? (Veiculo/Entrega/Funcionario/Cliente)\n");
+        scanf("%12s", escolha2);
+        if (strcmp(escolha2, "Veiculo") == 0) {
+            int id;
+            printf("Digite o ID do veículo a ser deletado: ");
+            scanf("%d", &id);
+            deletarVeiculo(id);
+        } else if (strcmp(escolha2, "Entrega") == 0) {
+            int id;
+            printf("Digite o ID da entrega a ser deletada: ");
+            scanf("%d", &id);
+            deletarEntrega(id);
+        } else if (strcmp(escolha2, "Funcionario") == 0) {
+            int id;
+            printf("Digite o ID do funcionário a ser deletado: ");
+            scanf("%d", &id);
+            deletarFuncionario(id);
+        } else if (strcmp(escolha2, "Cliente") == 0) {
+            int id;
+            printf("Digite o ID do cliente a ser deletado: ");
+            scanf("%d", &id);
+            deletarCliente(id);
+        } else {
+            printf("Ops! Parece que houve um erro de digitação.\n");
+        }
+    }
     else
     {
         printf("Ops! Parece que houve um erro de digitcao");
     }
 
-if (strcmp(escolha1, "Deletar") == 0) {
-    printf("O que deseja deletar? (Veiculo/Entrega/Funcionario/Cliente)\n");
-    scanf("%12s", escolha2);
-    if (strcmp(escolha2, "Veiculo") == 0) {
-        int id;
-        printf("Digite o ID do veículo a ser deletado: ");
-        scanf("%d", &id);
-        deletarVeiculo(id);
-    } else if (strcmp(escolha2, "Entrega") == 0) {
-        int id;
-        printf("Digite o ID da entrega a ser deletada: ");
-        scanf("%d", &id);
-        deletarEntrega(id);
-    } else if (strcmp(escolha2, "Funcionario") == 0) {
-        int id;
-        printf("Digite o ID do funcionário a ser deletado: ");
-        scanf("%d", &id);
-        deletarFuncionario(id);
-    } else if (strcmp(escolha2, "Cliente") == 0) {
-        int id;
-        printf("Digite o ID do cliente a ser deletado: ");
-        scanf("%d", &id);
-        deletarCliente(id);
-    } else {
-        printf("Ops! Parece que houve um erro de digitação.\n");
-    }
-} else {
-    printf("Ops! Parece que houve um erro de digitação.\n");
-}
+
+
 
 
 
