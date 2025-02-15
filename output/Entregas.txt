@@ -1,8 +1,0 @@
-ID da Entrega: 1
-Origem: sp
-Destino: rj
-Tempo Estimado: 3.0 Horas
-ID da Entrega: 2
-Origem: Fortal
-Destino: pedra
-Tempo Estimado: 0.0 Horas
