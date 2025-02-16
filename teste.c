@@ -654,48 +654,127 @@ void editarCliente(int cliente_ID)
     }
 }
 
-void visualizarPorID(const char *nomeArquivo, const char *tipo, int idBuscado)
+void visualizarVeiculoPorID(int veiculo_ID)
 {
-    FILE *arquivo = fopen(nomeArquivo, "r");
+    FILE *arquivo = fopen("Veiculos.txt", "r");
     if (arquivo == NULL)
     {
-        printf("Erro ao abrir o arquivo %s.\n", nomeArquivo);
+        printf("Erro ao abrir o arquivo de veículos.\n");
         return;
     }
 
-    char linha[200];
+    struct Veiculos veiculo;
     int encontrado = 0;
 
-    printf("\nVisualização de %s com ID %d\n", tipo, idBuscado);
-    while (fgets(linha, sizeof(linha), arquivo))
+    while (fscanf(arquivo, "ID do Veículo: %d\nTipo: %s\nCarga: %f Kg\nStatus: %s\n",
+                  &veiculo.veiculo_ID, veiculo.tipoVeiculo, &veiculo.cargaVeiculo, veiculo.statusVeiculo) != EOF)
     {
-        if (strstr(linha, "ID") && strstr(linha, tipo))
+        if (veiculo.veiculo_ID == veiculo_ID)
         {
-            int idAtual;
-            sscanf(linha, "%*[^:]: %d", &idAtual);
-            if (idAtual == idBuscado)
-            {
-                encontrado = 1;
-                printf("%s", linha);
-                for (int i = 0; i < 3; i++)
-                {
-                    if (fgets(linha, sizeof(linha), arquivo))
-                    {
-                        printf("%s", linha);
-                    }
-                }
-                break;
-            }
+            printf("ID do Veículo: %d\nTipo: %s\nCarga: %.2f Kg\nStatus: %s\n",
+                   veiculo.veiculo_ID, veiculo.tipoVeiculo, veiculo.cargaVeiculo, veiculo.statusVeiculo);
+            encontrado = 1;
+            break;
         }
     }
-
+    fclose(arquivo);
     if (!encontrado)
     {
-        printf("Nenhum %s encontrado com ID %d.\n", tipo, idBuscado);
+        printf("Veículo com ID %d não encontrado.\n", veiculo_ID);
+    }
+}
+
+void visualizarEntregaPorID(int entrega_ID)
+{
+    FILE *arquivo = fopen("Entregas.txt", "r");
+    if (arquivo == NULL)
+    {
+        printf("Erro ao abrir o arquivo de entregas.\n");
+        return;
     }
 
+    struct Entregas entrega;
+    int encontrado = 0;
+
+    while (fscanf(arquivo, "ID da Entrega: %d\nOrigem: %s\nDestino: %s\nTempo Estimado: %f Horas\n",
+                  &entrega.entrega_ID, entrega.origem, entrega.destino, &entrega.tempoEstimado) != EOF)
+    {
+        if (entrega.entrega_ID == entrega_ID)
+        {
+            printf("ID da Entrega: %d\nOrigem: %s\nDestino: %s\nTempo Estimado: %.1f Horas\n",
+                   entrega.entrega_ID, entrega.origem, entrega.destino, entrega.tempoEstimado);
+            encontrado = 1;
+            break;
+        }
+    }
     fclose(arquivo);
+    if (!encontrado)
+    {
+        printf("Entrega com ID %d não encontrada.\n", entrega_ID);
+    }
 }
+
+void visualizarFuncionarioPorID(int funcionario_ID)
+{
+    FILE *arquivo = fopen("Funcionarios.txt", "r");
+    if (arquivo == NULL)
+    {
+        printf("Erro ao abrir o arquivo de funcionários.\n");
+        return;
+    }
+
+    struct Funcionarios funcionario;
+    int encontrado = 0;
+
+    while (fscanf(arquivo, "ID do Funcionário: %d\nNome: %s\n",
+                  &funcionario.funcionario_ID, funcionario.nomeFuncionario) != EOF)
+    {
+        if (funcionario.funcionario_ID == funcionario_ID)
+        {
+            printf("ID do Funcionário: %d\nNome: %s\n",
+                   funcionario.funcionario_ID, funcionario.nomeFuncionario);
+            encontrado = 1;
+            break;
+        }
+    }
+    fclose(arquivo);
+    if (!encontrado)
+    {
+        printf("Funcionário com ID %d não encontrado.\n", funcionario_ID);
+    }
+}
+
+void visualizarClientePorID(int cliente_ID)
+{
+    FILE *arquivo = fopen("Clientes.txt", "r");
+    if (arquivo == NULL)
+    {
+        printf("Erro ao abrir o arquivo de clientes.\n");
+        return;
+    }
+
+    struct Clientes cliente;
+    int encontrado = 0;
+
+    while (fscanf(arquivo, "ID do Cliente: %d\nNome: %s\nEndereço: %s\nTipo de Serviço: %s\n",
+                  &cliente.cliente_ID, cliente.nomeCliente, cliente.endereco, cliente.tipoServico) != EOF)
+    {
+        if (cliente.cliente_ID == cliente_ID)
+        {
+            printf("ID do Cliente: %d\nNome: %s\nEndereço: %s\nTipo de Serviço: %s\n",
+                   cliente.cliente_ID, cliente.nomeCliente, cliente.endereco, cliente.tipoServico);
+            encontrado = 1;
+            break;
+        }
+    }
+    fclose(arquivo);
+    if (!encontrado)
+    {
+        printf("Cliente com ID %d não encontrado.\n", cliente_ID);
+    }
+}
+
+
 
 int main()
 {
@@ -867,7 +946,7 @@ int main()
                     int idBuscado;
                     printf("Digite o ID que deseja visualizar: ");
                     scanf("%d", &idBuscado);
-                    visualizarPorID("Veiculos.txt", "Veículo", idBuscado);
+                    visualizarVeiculoPorID(idBuscado);
                     esc = 1;
                 }
                 else if (strcmp(escolha2, "Entrega") == 0)
@@ -875,7 +954,7 @@ int main()
                     int idBuscado;
                     printf("Digite o ID que deseja visualizar: ");
                     scanf("%d", &idBuscado);
-                    visualizarPorID("Entregas.txt", "Entrega", idBuscado);
+                    visualizarEntregaPorID(idBuscado);
                     esc = 1;
                 }
                 else if (strcmp(escolha2, "Funcionario") == 0)
@@ -883,7 +962,7 @@ int main()
                     int idBuscado;
                     printf("Digite o ID que deseja visualizar: ");
                     scanf("%d", &idBuscado);
-                    visualizarPorID("Funcionarios.txt", "Funcionário", idBuscado);
+                    visualizarFuncionarioPorID(idBuscado);
                     esc = 1;
                 }
                 else if (strcmp(escolha2, "Cliente") == 0)
@@ -891,7 +970,7 @@ int main()
                     int idBuscado;
                     printf("Digite o ID que deseja visualizar: ");
                     scanf("%d", &idBuscado);
-                    visualizarPorID("Clientes.txt", "Cliente", idBuscado);
+                    visualizarClientePorID(idBuscado);
                     esc = 1;
                 }
                 else if (strcmp(escolha2, "voltar") == 0)
