@@ -764,6 +764,160 @@ void visualizarPorID(const char *nomeArquivo, const char *tipo, int idBuscado)
     fclose(arquivo);
 }
 
+void realizarEntrega() {
+    int entrega_ID, funcionario_ID, veiculo_ID;
+    float tempoRealizado;
+
+    printf("Digite o ID da entrega que deseja realizar: ");
+    scanf("%d", &entrega_ID);
+
+    printf("Digite o ID do funcionário responsável: ");
+    scanf("%d", &funcionario_ID);
+
+    printf("Digite o ID do veículo utilizado: ");
+    scanf("%d", &veiculo_ID);
+
+    printf("Digite o tempo realizado (em horas): ");
+    scanf("%f", &tempoRealizado);
+
+    FILE *arquivoFuncionarios = fopen("Funcionarios.txt", "r");
+    if (arquivoFuncionarios == NULL) {
+        printf("Erro ao abrir o arquivo de funcionários.\n");
+        return;
+    }
+
+    int funcionarioEncontrado = 0;
+    struct Funcionarios funcionario;
+    char linha[100];
+
+    while (fgets(linha, sizeof(linha), arquivoFuncionarios) != NULL) {
+        if (sscanf(linha, "ID do Funcionário: %d", &funcionario.funcionario_ID) == 1) {
+            if (funcionario.funcionario_ID == funcionario_ID) {
+                funcionarioEncontrado = 1;
+                fgets(linha, sizeof(linha), arquivoFuncionarios); 
+                sscanf(linha, "Nome: %s", funcionario.nomeFuncionario);
+                break;
+            }
+        }
+    }
+    fclose(arquivoFuncionarios);
+
+    if (!funcionarioEncontrado) {
+        printf("Funcionário com ID %d não encontrado.\n", funcionario_ID);
+        return;
+    }
+
+    FILE *arquivoVeiculos = fopen("Veiculos.txt", "r");
+    if (arquivoVeiculos == NULL) {
+        printf("Erro ao abrir o arquivo de veículos.\n");
+        return;
+    }
+
+    int veiculoEncontrado = 0;
+    struct Veiculos veiculo;
+
+    while (fgets(linha, sizeof(linha), arquivoVeiculos) != NULL) {
+        if (sscanf(linha, "ID do Veículo: %d", &veiculo.veiculo_ID) == 1) {
+            if (veiculo.veiculo_ID == veiculo_ID) {
+                veiculoEncontrado = 1;
+                fgets(linha, sizeof(linha), arquivoVeiculos); 
+                sscanf(linha, "Tipo: %s", veiculo.tipoVeiculo);
+                fgets(linha, sizeof(linha), arquivoVeiculos); 
+                sscanf(linha, "Carga: %f Kg", &veiculo.cargaVeiculo);
+                fgets(linha, sizeof(linha), arquivoVeiculos); 
+                sscanf(linha, "Status: %s", veiculo.statusVeiculo);
+                if (strcmp(veiculo.statusVeiculo, "disponivel") != 0) {
+                    printf("Veículo com ID %d não está disponível.\n", veiculo_ID);
+                    fclose(arquivoVeiculos);
+                    return;
+                }
+                break;
+            }
+        }
+    }
+    fclose(arquivoVeiculos);
+
+    if (!veiculoEncontrado) {
+        printf("Veículo com ID %d não encontrado.\n", veiculo_ID);
+        return;
+    }
+
+    FILE *arquivoEntregas = fopen("Entregas.txt", "r");
+    if (arquivoEntregas == NULL) {
+        printf("Erro ao abrir o arquivo de entregas.\n");
+        return;
+    }
+
+    int entregaEncontrada = 0;
+    struct Entregas entrega;
+
+    while (fgets(linha, sizeof(linha), arquivoEntregas) != NULL) {
+        if (sscanf(linha, "ID da Entrega: %d", &entrega.entrega_ID) == 1) {
+            if (entrega.entrega_ID == entrega_ID) {
+                entregaEncontrada = 1;
+                fgets(linha, sizeof(linha), arquivoEntregas); 
+                sscanf(linha, "Origem: %s", entrega.origem);
+                fgets(linha, sizeof(linha), arquivoEntregas); 
+                sscanf(linha, "Destino: %s", entrega.destino);
+                fgets(linha, sizeof(linha), arquivoEntregas); 
+                sscanf(linha, "Tempo Estimado: %f Horas", &entrega.tempoEstimado);
+                break;
+            }
+        }
+    }
+    fclose(arquivoEntregas);
+
+    if (!entregaEncontrada) {
+        printf("Entrega com ID %d não encontrada.\n", entrega_ID);
+        return;
+    }
+
+    int realizacao_ID = pegarUltimoId("idRealizacao.txt") + 1;
+    atualizarId("idRealizacao.txt", realizacao_ID);
+
+
+    FILE *arquivoRealizacoes = fopen("Realizacoes.txt", "a");
+    if (arquivoRealizacoes == NULL) {
+        printf("Erro ao abrir o arquivo de realizações.\n");
+        return;
+    }
+
+    fprintf(arquivoRealizacoes, "Realização ID: %d\nEntrega ID: %d\nFuncionário ID: %d\nVeículo ID: %d\nTempo Realizado: %.1f Horas\n\n",
+            realizacao_ID, entrega_ID, funcionario_ID, veiculo_ID, tempoRealizado);
+
+    fclose(arquivoRealizacoes);
+
+    FILE *arquivoVeiculosLeitura = fopen("Veiculos.txt", "r");
+    FILE *arquivoVeiculosTemp = fopen("Temp.txt", "w");
+    if (arquivoVeiculosLeitura == NULL || arquivoVeiculosTemp == NULL) {
+        printf("Erro ao abrir arquivo de veículos.\n");
+        return;
+    }
+
+    while (fgets(linha, sizeof(linha), arquivoVeiculosLeitura) != NULL) {
+        if (sscanf(linha, "ID do Veículo: %d", &veiculo.veiculo_ID) == 1) {
+            fgets(linha, sizeof(linha), arquivoVeiculosLeitura); 
+            sscanf(linha, "Tipo: %s", veiculo.tipoVeiculo);
+            fgets(linha, sizeof(linha), arquivoVeiculosLeitura);
+            sscanf(linha, "Carga: %f Kg", &veiculo.cargaVeiculo);
+            fgets(linha, sizeof(linha), arquivoVeiculosLeitura); 
+            sscanf(linha, "Status: %s", veiculo.statusVeiculo);
+            if (veiculo.veiculo_ID == veiculo_ID) {
+                strcpy(veiculo.statusVeiculo, "ocupado");
+            }
+            fprintf(arquivoVeiculosTemp, "ID do Veículo: %d\nTipo: %s\nCarga: %.2f Kg\nStatus: %s\n",
+                    veiculo.veiculo_ID, veiculo.tipoVeiculo, veiculo.cargaVeiculo, veiculo.statusVeiculo);
+        }
+    }
+
+    fclose(arquivoVeiculosLeitura);
+    fclose(arquivoVeiculosTemp);
+
+    remove("Veiculos.txt");
+    rename("Temp.txt", "Veiculos.txt");
+
+    printf("Entrega realizada com sucesso. ID da realização: %d\n", realizacao_ID);
+}
 int main()
 {
     struct Veiculos veiculo;
@@ -970,6 +1124,9 @@ int main()
                     printf("\nOps! Parece que houve um erro de digitação.\n");
                 }
             }
+        }
+        else if (strcmp(escolha1,"Realizar entrega") == 0){
+            realizarEntrega();
         }
         else if (strcmp(escolha1, "sair") == 0)
         {
