@@ -2,8 +2,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-// AVISO: Por favor, olhar as alterações dos colegas do grupo
-// Caso tenha algo chato do C busque comentar ex: usar "strcmp" pra saber se strings são iguais
 
 struct Veiculos
 {
@@ -135,15 +133,19 @@ void adicionarVeiculo(struct Veiculos *veiculo)
     veiculo->veiculo_ID = id_veiculo;
 
     printf("Tipo de veiculo: ");
-    scanf("%s", veiculo->tipoVeiculo);
+    getchar(); 
+    fgets(veiculo->tipoVeiculo, sizeof(veiculo->tipoVeiculo), stdin);
+    veiculo->tipoVeiculo[strcspn(veiculo->tipoVeiculo, "\n")] = 0; // Remove o '\n'
 
     printf("Carga maxima (em kg): ");
     scanf("%f", &veiculo->cargaVeiculo);
+    getchar();
 
     printf("Status (disponivel/ocupado): ");
-    scanf("%s", veiculo->statusVeiculo);
-    getchar();
+    fgets(veiculo->statusVeiculo, sizeof(veiculo->statusVeiculo), stdin);
+    veiculo->statusVeiculo[strcspn(veiculo->statusVeiculo, "\n")] = 0; 
 }
+
 
 void adicionarEntrega(struct Entregas *entrega)
 {
@@ -152,15 +154,19 @@ void adicionarEntrega(struct Entregas *entrega)
     entrega->entrega_ID = id_entrega;
 
     printf("Origem: ");
-    scanf("%s", entrega->origem);
+    getchar(); // Limpa o buffer antes de fgets
+    fgets(entrega->origem, sizeof(entrega->origem), stdin);
+    entrega->origem[strcspn(entrega->origem, "\n")] = '\0'; // Remove o '\n'
 
     printf("Destino: ");
-    scanf("%s", entrega->destino);
+    fgets(entrega->destino, sizeof(entrega->destino), stdin);
+    entrega->destino[strcspn(entrega->destino, "\n")] = '\0'; // Remove o '\n'
 
     printf("Tempo estimado (em horas): ");
     scanf("%f", &entrega->tempoEstimado);
-    getchar();
+    getchar(); // Evita problemas na leitura do próximo campo
 }
+
 
 void adicionarFuncionario(struct Funcionarios *funcionario)
 {
@@ -169,9 +175,10 @@ void adicionarFuncionario(struct Funcionarios *funcionario)
     funcionario->funcionario_ID = id_funcionario;
 
     printf("Nome: ");
-    scanf("%s", funcionario->nomeFuncionario);
-    getchar();
+    fgets(funcionario->nomeFuncionario, sizeof(funcionario->nomeFuncionario), stdin);
+    funcionario->nomeFuncionario[strcspn(funcionario->nomeFuncionario, "\n")] = '\0'; // Remove o '\n' do final
 }
+
 
 void adicionarCliente(struct Clientes *cliente)
 {
@@ -180,15 +187,18 @@ void adicionarCliente(struct Clientes *cliente)
     cliente->cliente_ID = id_cliente;
 
     printf("Nome: ");
-    scanf("%s", cliente->nomeCliente);
+    fgets(cliente->nomeCliente, sizeof(cliente->nomeCliente), stdin);
+    cliente->nomeCliente[strcspn(cliente->nomeCliente, "\n")] = '\0';
 
     printf("Endereco: ");
-    scanf("%s", cliente->endereco);
+    fgets(cliente->endereco, sizeof(cliente->endereco), stdin);
+    cliente->endereco[strcspn(cliente->endereco, "\n")] = '\0';
 
     printf("Tipo de serviço: ");
-    scanf("%s", cliente->tipoServico);
-    getchar();
+    fgets(cliente->tipoServico, sizeof(cliente->tipoServico), stdin);
+    cliente->tipoServico[strcspn(cliente->tipoServico, "\n")] = '\0';
 }
+
 void deletarVeiculo(int veiculo_ID)
 {
     FILE *arquivoVeiculos = fopen("Veiculos.txt", "r");
