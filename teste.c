@@ -64,6 +64,7 @@ void atualizarId(const char *arquivoDaEntidade, int novo_id)
         exit(1);
     }
     fprintf(arquivoId, "%d", novo_id);
+    fclose(arquivoId);
 }
 
 void cadastrarVeiculo(struct Veiculos veiculo)
