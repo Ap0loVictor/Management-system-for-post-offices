@@ -204,9 +204,10 @@ void deletarVeiculo(int veiculo_ID)
 {
     FILE *arquivoVeiculos = fopen("Veiculos.txt", "r");
     FILE *arquivoTemp = fopen("Temp.txt", "w");
+
     if (arquivoVeiculos == NULL || arquivoTemp == NULL)
     {
-        printf("Erro ao abrir arquivo.");
+        printf("Erro ao abrir arquivo.\n");
         system("Pause");
         exit(1);
     }
@@ -214,9 +215,12 @@ void deletarVeiculo(int veiculo_ID)
     struct Veiculos veiculo;
     int encontrado = 0;
 
-    while (fscanf(arquivoVeiculos, "ID do Veículo: %d\nTipo: %s\nCarga: %f Kg\nStatus: %s\n",
-                  &veiculo.veiculo_ID, veiculo.tipoVeiculo, &veiculo.cargaVeiculo, veiculo.statusVeiculo) != EOF)
+    while (fscanf(arquivoVeiculos, "ID do Veículo: %d\n", &veiculo.veiculo_ID) == 1)
     {
+        fscanf(arquivoVeiculos, "Tipo: %[^\n]\n", veiculo.tipoVeiculo);
+        fscanf(arquivoVeiculos, "Carga: %f Kg\n", &veiculo.cargaVeiculo);
+        fscanf(arquivoVeiculos, "Status: %[^\n]\n", veiculo.statusVeiculo);
+
         if (veiculo.veiculo_ID != veiculo_ID)
         {
             fprintf(arquivoTemp, "ID do Veículo: %d\nTipo: %s\nCarga: %.2f Kg\nStatus: %s\n",
@@ -233,9 +237,21 @@ void deletarVeiculo(int veiculo_ID)
 
     if (encontrado)
     {
-        remove("Veiculos.txt");
-        rename("Temp.txt", "Veiculos.txt");
-        printf("Veículo deletado com sucesso.\n");
+        if (remove("Veiculos.txt") == 0)
+        {
+            if (rename("Temp.txt", "Veiculos.txt") == 0)
+            {
+                printf("Veículo deletado com sucesso.\n");
+            }
+            else
+            {
+                printf("Erro ao renomear arquivo.\n");
+            }
+        }
+        else
+        {
+            printf("Erro ao remover o arquivo original.\n");
+        }
     }
     else
     {
@@ -244,13 +260,15 @@ void deletarVeiculo(int veiculo_ID)
     }
 }
 
+
 void deletarEntrega(int entrega_ID)
 {
     FILE *arquivoEntregas = fopen("Entregas.txt", "r");
     FILE *arquivoTemp = fopen("Temp.txt", "w");
+
     if (arquivoEntregas == NULL || arquivoTemp == NULL)
     {
-        printf("Erro ao abrir arquivo.");
+        printf("Erro ao abrir arquivo.\n");
         system("Pause");
         exit(1);
     }
@@ -258,9 +276,12 @@ void deletarEntrega(int entrega_ID)
     struct Entregas entrega;
     int encontrado = 0;
 
-    while (fscanf(arquivoEntregas, "ID da Entrega: %d\nOrigem: %s\nDestino: %s\nTempo Estimado: %f Horas\n",
-                  &entrega.entrega_ID, entrega.origem, entrega.destino, &entrega.tempoEstimado) != EOF)
+    while (fscanf(arquivoEntregas, "ID da Entrega: %d\n", &entrega.entrega_ID) == 1)
     {
+        fscanf(arquivoEntregas, "Origem: %[^\n]\n", entrega.origem);
+        fscanf(arquivoEntregas, "Destino: %[^\n]\n", entrega.destino);
+        fscanf(arquivoEntregas, "Tempo Estimado: %f Horas\n", &entrega.tempoEstimado);
+
         if (entrega.entrega_ID != entrega_ID)
         {
             fprintf(arquivoTemp, "ID da Entrega: %d\nOrigem: %s\nDestino: %s\nTempo Estimado: %.1f Horas\n",
@@ -277,9 +298,21 @@ void deletarEntrega(int entrega_ID)
 
     if (encontrado)
     {
-        remove("Entregas.txt");
-        rename("Temp.txt", "Entregas.txt");
-        printf("Entrega deletada com sucesso.\n");
+        if (remove("Entregas.txt") == 0)
+        {
+            if (rename("Temp.txt", "Entregas.txt") == 0)
+            {
+                printf("Entrega deletada com sucesso.\n");
+            }
+            else
+            {
+                printf("Erro ao renomear arquivo.\n");
+            }
+        }
+        else
+        {
+            printf("Erro ao remover o arquivo original.\n");
+        }
     }
     else
     {
@@ -292,9 +325,10 @@ void deletarFuncionario(int funcionario_ID)
 {
     FILE *arquivoFuncionarios = fopen("Funcionarios.txt", "r");
     FILE *arquivoTemp = fopen("Temp.txt", "w");
+
     if (arquivoFuncionarios == NULL || arquivoTemp == NULL)
     {
-        printf("Erro ao abrir arquivo.");
+        printf("Erro ao abrir arquivo.\n");
         system("Pause");
         exit(1);
     }
@@ -302,9 +336,10 @@ void deletarFuncionario(int funcionario_ID)
     struct Funcionarios funcionario;
     int encontrado = 0;
 
-    while (fscanf(arquivoFuncionarios, "ID do Funcionário: %d\nNome: %s\n",
-                  &funcionario.funcionario_ID, funcionario.nomeFuncionario) != EOF)
+    while (fscanf(arquivoFuncionarios, "ID do Funcionário: %d\n", &funcionario.funcionario_ID) == 1)
     {
+        fscanf(arquivoFuncionarios, "Nome: %[^\n]\n", funcionario.nomeFuncionario);
+
         if (funcionario.funcionario_ID != funcionario_ID)
         {
             fprintf(arquivoTemp, "ID do Funcionário: %d\nNome: %s\n",
@@ -321,9 +356,21 @@ void deletarFuncionario(int funcionario_ID)
 
     if (encontrado)
     {
-        remove("Funcionarios.txt");
-        rename("Temp.txt", "Funcionarios.txt");
-        printf("Funcionário deletado com sucesso.\n");
+        if (remove("Funcionarios.txt") == 0)
+        {
+            if (rename("Temp.txt", "Funcionarios.txt") == 0)
+            {
+                printf("Funcionário deletado com sucesso.\n");
+            }
+            else
+            {
+                printf("Erro ao renomear arquivo.\n");
+            }
+        }
+        else
+        {
+            printf("Erro ao remover o arquivo original.\n");
+        }
     }
     else
     {
@@ -331,13 +378,15 @@ void deletarFuncionario(int funcionario_ID)
         printf("Funcionário não encontrado.\n");
     }
 }
+
 void deletarCliente(int cliente_ID)
 {
     FILE *arquivoClientes = fopen("Clientes.txt", "r");
     FILE *arquivoTemp = fopen("Temp.txt", "w");
+
     if (arquivoClientes == NULL || arquivoTemp == NULL)
     {
-        printf("Erro ao abrir arquivo.");
+        printf("Erro ao abrir arquivo.\n");
         system("Pause");
         exit(1);
     }
@@ -345,9 +394,12 @@ void deletarCliente(int cliente_ID)
     struct Clientes cliente;
     int encontrado = 0;
 
-    while (fscanf(arquivoClientes, "ID do Cliente: %d\nNome: %s\nEndereço: %s\nTipo de Serviço: %s\n",
-                  &cliente.cliente_ID, cliente.nomeCliente, cliente.endereco, cliente.tipoServico) != EOF)
+    while (fscanf(arquivoClientes, "ID do Cliente: %d\n", &cliente.cliente_ID) == 1)
     {
+        fscanf(arquivoClientes, "Nome: %[^\n]\n", cliente.nomeCliente);
+        fscanf(arquivoClientes, "Endereço: %[^\n]\n", cliente.endereco);
+        fscanf(arquivoClientes, "Tipo de Serviço: %[^\n]\n", cliente.tipoServico);
+
         if (cliente.cliente_ID != cliente_ID)
         {
             fprintf(arquivoTemp, "ID do Cliente: %d\nNome: %s\nEndereço: %s\nTipo de Serviço: %s\n",
@@ -364,9 +416,21 @@ void deletarCliente(int cliente_ID)
 
     if (encontrado)
     {
-        remove("Clientes.txt");
-        rename("Temp.txt", "Clientes.txt");
-        printf("Cliente deletado com sucesso.\n");
+        if (remove("Clientes.txt") == 0)
+        {
+            if (rename("Temp.txt", "Clientes.txt") == 0)
+            {
+                printf("Cliente deletado com sucesso.\n");
+            }
+            else
+            {
+                printf("Erro ao renomear arquivo.\n");
+            }
+        }
+        else
+        {
+            printf("Erro ao remover o arquivo original.\n");
+        }
     }
     else
     {
@@ -374,6 +438,7 @@ void deletarCliente(int cliente_ID)
         printf("Cliente não encontrado.\n");
     }
 }
+
 
 void editarVeiculo(int veiculo_ID)
 {
