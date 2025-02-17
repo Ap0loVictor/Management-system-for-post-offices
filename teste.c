@@ -913,7 +913,7 @@ void realizarEntrega() {
     int funcionarioEncontrado = 0;
     struct Funcionarios funcionario;
 
-    while (fgets(linha, sizeof(linha), arquivoFuncionarios != NULL)) {
+    while (fgets(linha, sizeof(linha), arquivoFuncionarios) != NULL) {
         if (sscanf(linha, "ID do Funcionário: %d", &funcionario.funcionario_ID) == 1) {
             if (funcionario.funcionario_ID == funcionario_ID) {
                 funcionarioEncontrado = 1;
@@ -974,7 +974,7 @@ void realizarEntrega() {
     int entregaEncontrada = 0;
     struct Entregas entrega;
 
-    while (fgets(linha, sizeof(linha), arquivoEntregas != NULL)) {
+    while (fgets(linha, sizeof(linha), arquivoEntregas) != NULL) {
         if (sscanf(linha, "ID da Entrega: %d", &entrega.entrega_ID) == 1) {
             if (entrega.entrega_ID == entrega_ID) {
                 entregaEncontrada = 1;
@@ -1016,7 +1016,7 @@ void realizarEntrega() {
         return;
     }
 
-    while (fgets(linha, sizeof(linha), arquivoVeiculosLeitura != NULL)) {
+    while (fgets(linha, sizeof(linha), arquivoVeiculosLeitura) != NULL) {
         if (sscanf(linha, "ID do Veículo: %d", &veiculo.veiculo_ID) == 1) {
             fgets(linha, sizeof(linha), arquivoVeiculosLeitura); 
             sscanf(linha, "Tipo: %[^\n]", veiculo.tipoVeiculo);
