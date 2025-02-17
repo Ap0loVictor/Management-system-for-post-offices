@@ -855,7 +855,7 @@ void visualizarClientePorID(int cliente_ID)
 
 
 void realizarEntrega() {
-    int entrega_ID, funcionario_ID, veiculo_ID;
+    int entrega_ID, funcionario_ID, veiculo_ID, cliente_ID;
     float tempoRealizado;
 
     printf("Digite o ID da entrega que deseja realizar: ");
@@ -867,8 +867,42 @@ void realizarEntrega() {
     printf("Digite o ID do veículo utilizado: ");
     scanf("%d", &veiculo_ID);
 
+    printf("Digite o ID do cliente: ");
+    scanf("%d", &cliente_ID);
+
     printf("Digite o tempo realizado (em horas): ");
     scanf("%f", &tempoRealizado);
+
+    FILE *arquivoClientes = fopen("Clientes.txt", "r");
+    if (arquivoClientes == NULL) {
+        printf("Erro ao abrir o arquivo de clientes.\n");
+        return;
+    }
+
+    int clienteEncontrado = 0;
+    struct Clientes cliente;
+    char linha[100];
+
+    while (fgets(linha, sizeof(linha), arquivoClientes) != NULL) {
+        if (sscanf(linha, "ID do Cliente: %d", &cliente.cliente_ID) == 1) {
+            if (cliente.cliente_ID == cliente_ID) {
+                clienteEncontrado = 1;
+                fgets(linha, sizeof(linha), arquivoClientes); 
+                sscanf(linha, "Nome: %[^\n]", cliente.nomeCliente);
+                fgets(linha, sizeof(linha), arquivoClientes); 
+                sscanf(linha, "Endereço: %[^\n]", cliente.endereco);
+                fgets(linha, sizeof(linha), arquivoClientes); 
+                sscanf(linha, "Tipo de Serviço: %[^\n]", cliente.tipoServico);
+                break;
+            }
+        }
+    }
+    fclose(arquivoClientes);
+
+    if (!clienteEncontrado) {
+        printf("Cliente com ID %d não encontrado.\n", cliente_ID);
+        return;
+    }
 
     FILE *arquivoFuncionarios = fopen("Funcionarios.txt", "r");
     if (arquivoFuncionarios == NULL) {
@@ -878,14 +912,13 @@ void realizarEntrega() {
 
     int funcionarioEncontrado = 0;
     struct Funcionarios funcionario;
-    char linha[100];
 
-    while (fgets(linha, sizeof(linha), arquivoFuncionarios) != NULL) {
+    while (fgets(linha, sizeof(linha), arquivoFuncionarios != NULL)) {
         if (sscanf(linha, "ID do Funcionário: %d", &funcionario.funcionario_ID) == 1) {
             if (funcionario.funcionario_ID == funcionario_ID) {
                 funcionarioEncontrado = 1;
                 fgets(linha, sizeof(linha), arquivoFuncionarios); 
-                sscanf(linha, "Nome: %s", funcionario.nomeFuncionario);
+                sscanf(linha, "Nome: %[^\n]", funcionario.nomeFuncionario);
                 break;
             }
         }
@@ -911,11 +944,11 @@ void realizarEntrega() {
             if (veiculo.veiculo_ID == veiculo_ID) {
                 veiculoEncontrado = 1;
                 fgets(linha, sizeof(linha), arquivoVeiculos); 
-                sscanf(linha, "Tipo: %s", veiculo.tipoVeiculo);
+                sscanf(linha, "Tipo: %[^\n]", veiculo.tipoVeiculo);
                 fgets(linha, sizeof(linha), arquivoVeiculos); 
                 sscanf(linha, "Carga: %f Kg", &veiculo.cargaVeiculo);
                 fgets(linha, sizeof(linha), arquivoVeiculos); 
-                sscanf(linha, "Status: %s", veiculo.statusVeiculo);
+                sscanf(linha, "Status: %[^\n]", veiculo.statusVeiculo);
                 if (strcmp(veiculo.statusVeiculo, "disponivel") != 0) {
                     printf("Veículo com ID %d não está disponível.\n", veiculo_ID);
                     fclose(arquivoVeiculos);
@@ -941,14 +974,14 @@ void realizarEntrega() {
     int entregaEncontrada = 0;
     struct Entregas entrega;
 
-    while (fgets(linha, sizeof(linha), arquivoEntregas) != NULL) {
+    while (fgets(linha, sizeof(linha), arquivoEntregas != NULL)) {
         if (sscanf(linha, "ID da Entrega: %d", &entrega.entrega_ID) == 1) {
             if (entrega.entrega_ID == entrega_ID) {
                 entregaEncontrada = 1;
                 fgets(linha, sizeof(linha), arquivoEntregas); 
-                sscanf(linha, "Origem: %s", entrega.origem);
+                sscanf(linha, "Origem: %[^\n]", entrega.origem);
                 fgets(linha, sizeof(linha), arquivoEntregas); 
-                sscanf(linha, "Destino: %s", entrega.destino);
+                sscanf(linha, "Destino: %[^\n]", entrega.destino);
                 fgets(linha, sizeof(linha), arquivoEntregas); 
                 sscanf(linha, "Tempo Estimado: %f Horas", &entrega.tempoEstimado);
                 break;
@@ -965,15 +998,14 @@ void realizarEntrega() {
     int realizacao_ID = pegarUltimoId("idRealizacao.txt") + 1;
     atualizarId("idRealizacao.txt", realizacao_ID);
 
-
-    FILE *arquivoRealizacoes = fopen("Realizacoes.txt", "a");
+    FILE *arquivoRealizacoes = fopen("entregasConcluidas.txt", "a");
     if (arquivoRealizacoes == NULL) {
         printf("Erro ao abrir o arquivo de realizações.\n");
         return;
     }
 
-    fprintf(arquivoRealizacoes, "Realização ID: %d\nEntrega ID: %d\nFuncionário ID: %d\nVeículo ID: %d\nTempo Realizado: %.1f Horas\n\n",
-            realizacao_ID, entrega_ID, funcionario_ID, veiculo_ID, tempoRealizado);
+    fprintf(arquivoRealizacoes, "Realização ID: %d\nEntrega ID: %d\nFuncionário ID: %d\nVeículo ID: %d\nCliente ID: %d\nOrigem: %s\nDestino: %s\nTempo Realizado: %.1f Horas\n\n",
+            realizacao_ID, entrega_ID, funcionario_ID, veiculo_ID, cliente_ID, entrega.origem, entrega.destino, tempoRealizado);
 
     fclose(arquivoRealizacoes);
 
@@ -984,14 +1016,14 @@ void realizarEntrega() {
         return;
     }
 
-    while (fgets(linha, sizeof(linha), arquivoVeiculosLeitura) != NULL) {
+    while (fgets(linha, sizeof(linha), arquivoVeiculosLeitura != NULL)) {
         if (sscanf(linha, "ID do Veículo: %d", &veiculo.veiculo_ID) == 1) {
             fgets(linha, sizeof(linha), arquivoVeiculosLeitura); 
-            sscanf(linha, "Tipo: %s", veiculo.tipoVeiculo);
-            fgets(linha, sizeof(linha), arquivoVeiculosLeitura);
-            sscanf(linha, "Carga: %f Kg", &veiculo.cargaVeiculo);
+            sscanf(linha, "Tipo: %[^\n]", veiculo.tipoVeiculo);
             fgets(linha, sizeof(linha), arquivoVeiculosLeitura); 
-            sscanf(linha, "Status: %s", veiculo.statusVeiculo);
+            sscanf(linha, "Carga: %f Kg", &veiculo.cargaVeiculo);
+            fgets(linha, sizeof(linha), arquivoVeiculosLeitura);
+            sscanf(linha, "Status: %[^\n]", veiculo.statusVeiculo);
             if (veiculo.veiculo_ID == veiculo_ID) {
                 strcpy(veiculo.statusVeiculo, "ocupado");
             }
