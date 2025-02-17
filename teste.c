@@ -176,6 +176,7 @@ void adicionarFuncionario(struct Funcionarios *funcionario)
     funcionario->funcionario_ID = id_funcionario;
 
     printf("Nome: ");
+    getchar(); 
     fgets(funcionario->nomeFuncionario, sizeof(funcionario->nomeFuncionario), stdin);
     funcionario->nomeFuncionario[strcspn(funcionario->nomeFuncionario, "\n")] = '\0'; // Remove o '\n' do final
 }
@@ -188,6 +189,7 @@ void adicionarCliente(struct Clientes *cliente)
     cliente->cliente_ID = id_cliente;
 
     printf("Nome: ");
+    getchar(); 
     fgets(cliente->nomeCliente, sizeof(cliente->nomeCliente), stdin);
     cliente->nomeCliente[strcspn(cliente->nomeCliente, "\n")] = '\0';
 
