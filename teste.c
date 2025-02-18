@@ -1040,57 +1040,70 @@ void realizarEntrega() {
 
     printf("Entrega realizada com sucesso. ID da realização: %d\n", realizacao_ID);
 }
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
 void gerarRelatorio(int realizacao_ID) {
     FILE *arquivo = fopen("entregasConcluidas.txt", "r");
     if (arquivo == NULL) {
-        printf("Erro ao abrir o arquivo de relatorios.\n");
+        printf("Erro ao abrir o arquivo de relatórios.\n");
         return;
     }
 
     int id, entrega_ID, funcionario_ID, veiculo_ID;
     float tempoRealizado;
     int encontrado = 0;
-    char linha[100];
+    char linha[256]; // Buffer para leitura segura das linhas
 
+    // Lendo linha por linha até o final do arquivo
     while (fgets(linha, sizeof(linha), arquivo)) {
-        if (sscanf(linha, "Realização ID: %d", &id) == 1) {
-            if (id == realizacao_ID) { 
+        if (strstr(linha, "Realização ID:") && sscanf(linha, "Realização ID: %d", &id) == 1) {
+            if (id == realizacao_ID) {
                 encontrado = 1;
 
-                fgets(linha, sizeof(linha), arquivo);
-                sscanf(linha, "Entrega ID: %d", &entrega_ID);
+                // Ler os próximos valores do arquivo
+                while (fgets(linha, sizeof(linha), arquivo)) {
+                    if (strstr(linha, "Entrega ID:"))
+                        sscanf(linha, "Entrega ID: %d", &entrega_ID);
 
-                fgets(linha, sizeof(linha), arquivo);
-                sscanf(linha, "Funcionário ID: %d", &funcionario_ID);
+                    else if (strstr(linha, "Funcionário ID:"))
+                        sscanf(linha, "Funcionário ID: %d", &funcionario_ID);
 
-                fgets(linha, sizeof(linha), arquivo);
-                sscanf(linha, "Veículo ID: %d", &veiculo_ID);
+                    else if (strstr(linha, "Veículo ID:"))
+                        sscanf(linha, "Veículo ID: %d", &veiculo_ID);
 
-                fgets(linha, sizeof(linha), arquivo);
-                sscanf(linha, "Tempo Realizado: %f Horas", &tempoRealizado);
+                    else if (strstr(linha, "Tempo Realizado:")) {
+                        sscanf(linha, "Tempo Realizado: %f", &tempoRealizado);
+                        break; // Sai do loop após capturar todas as informações
+                    }
+                }
 
+                // Exibir relatório
                 printf("\n===== RELATÓRIO DA ENTREGA =====\n");
-                printf("Relatorio ID: %d\n", realizacao_ID);
-                printf("Entrega ID: %d\n", entrega_ID);
-                printf("Funcionário ID: %d\n", funcionario_ID);
-                printf("Veículo ID: %d\n", veiculo_ID);
+                printf("Relatório ID: %d\n", realizacao_ID);
+                printf("Entrega ID: %d\nFuncionário ID: %d\nVeículo ID: %d\n", entrega_ID, funcionario_ID, veiculo_ID);
                 printf("Tempo Realizado: %.1f Horas\n", tempoRealizado);
 
+                // Chamar funções auxiliares
                 printf("\nDetalhes adicionais:\n");
                 visualizarEntregaPorID(entrega_ID);
                 visualizarFuncionarioPorID(funcionario_ID);
                 visualizarVeiculoPorID(veiculo_ID);
 
-                break;
+                break; // Encerra a busca após encontrar o relatório desejado
             }
         }
     }
+
     fclose(arquivo);
 
     if (!encontrado) {
         printf("\nNenhum relatório encontrado para o ID da realização: %d.\n", realizacao_ID);
     }
 }
+
+
 int main()
 {
     struct Veiculos veiculo;
