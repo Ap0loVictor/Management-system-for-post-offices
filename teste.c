@@ -8,7 +8,7 @@ struct Veiculos
     int veiculo_ID;
     char tipoVeiculo[20];
     float cargaVeiculo;
-    char statusVeiculo[10];
+    char statusVeiculo[12];
 };
 
 struct Entregas
